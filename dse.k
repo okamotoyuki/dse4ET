@@ -27,6 +27,7 @@
 import("jansson");
 import("konoha.new");
 import("konoha.class");
+import("konoha.string");
 import("konoha.bytes");
 import("konoha.const");
 import("konoha.file");
@@ -50,7 +51,8 @@ class Logger {
 	}
 
 	void out() {
-		String command = "logger " + this.data.dump();
+		String str = this.data.dump();
+		String command = "logger " + str.replace("\"", "\\" + "\"");
 		System.system(command);
 	}
 }
@@ -97,7 +99,7 @@ void executeScript(Event e) {
 void DSE() {
 	EventHandler.setCallBack("D-Task", executeScript);
 
-	HttpEventListener.start("127.0.0.1", 8080);
+	HttpEventListener.start("127.0.0.1", PORT);
 
 	while(true) {
 		System.usleep(1000);
