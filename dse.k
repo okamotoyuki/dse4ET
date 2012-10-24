@@ -24,6 +24,7 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  ***************************************************************************/
 
+import("jansson");
 import("konoha.new");
 import("konoha.class");
 import("konoha.bytes");
@@ -32,6 +33,25 @@ import("cstyle", "while");
 import("posix.process");
 import("dscript.eventlistener");
 import("dscript.subproc");
+
+class Logger {
+	Json data;
+
+	Logger(void) {
+		this.data = new Json();
+	}
+
+	void set(String key, String value) {
+		this.data.setString(key, value);
+	}
+
+	void out() {
+		Subproc sp = new Subproc("", false);
+		sp.enableShellmode(false);
+		String command = "logger " + this.data.dump();
+		sp.exec(command);
+	}
+}
 
 void executeScript(Event e) {
 	String name = e.getProperty("name");
@@ -42,7 +62,13 @@ void executeScript(Event e) {
 	Subproc sp = new Subproc("", false);
 	sp.enableShellmode(false);
 	String command = "minikonoha " + name + ".k";
+	Logger startlog = new Logger();
+	startlog.set("state", "start");
+	startlog.out();
 	String result = sp.exec(command);
+	Logger endlog = new Logger();
+	endlog.set("state", "end");
+	endlog.out();
 	System.p(result);
 }
 
