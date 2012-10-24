@@ -28,11 +28,15 @@ import("jansson");
 import("konoha.new");
 import("konoha.class");
 import("konoha.bytes");
+import("konoha.const");
 import("konoha.file");
+import("konoha.date");
 import("cstyle", "while");
 import("posix.process");
 import("dscript.eventlistener");
 import("dscript.subproc");
+
+const DTASK_SUCCESS = 0;
 
 class Logger {
 	Json data;
@@ -53,23 +57,41 @@ class Logger {
 
 void executeScript(Event e) {
 	String name = e.getProperty("name");
+	String scriptname = name + ".k"
 	String script = e.getProperty("script");
-	FILE f = new FILE("./" + name + ".k", "w");
+	String ip = e.getProperty("ip");
+	FILE f = new FILE(scriptname, "w");
 	f.write(script.toBytes());
 	f.close();
-	String command = "minikonoha " + name + ".k";
+
+	String command = "minikonoha " + scriptname;
 	Subproc sp = new Subproc(command, false);
 	sp.enableShellmode(false);
 	sp.enablePipemodeOUT(true);
 	Logger startlog = new Logger();
 	startlog.set("state", "start");
+	startlog.set("script_name", scriptname);
+	startlog.set("ip", ip);
+	Date starttime = new Date();
+	startlog.set("time", starttime.getTime().toString());
 	startlog.out();
-	sp.fg();
-	String result = sp.communicate("")[0];
+	int result = sp.fg();
+	String error = sp.communicate("")[0];
 	Logger endlog = new Logger();
 	endlog.set("state", "end");
+	if(result == DTASK_SUCCESS) {
+		endlog.set("result", "success");
+	}
+	else {
+		endlog.set("result", "error");
+		endlog.set("error_log", error);
+	}
+	endlog.set("script_name", scriptname);
+	startlog.set("ip", ip);
+	Date endtime = new Date();
+	endlog.set("time", endtime.getTime().toString());
 	endlog.out();
-	System.p(result);
+	System.p(error);
 }
 
 void DSE() {
