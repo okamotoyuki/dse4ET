@@ -37,7 +37,7 @@ import("dscript.subproc");
 class Logger {
 	Json data;
 
-	Logger(void) {
+	Logger() {
 		this.data = new Json();
 	}
 
@@ -46,26 +46,26 @@ class Logger {
 	}
 
 	void out() {
-		Subproc sp = new Subproc("", false);
-		sp.enableShellmode(false);
 		String command = "logger " + this.data.dump();
-		sp.exec(command);
+		System.system(command);
 	}
 }
 
 void executeScript(Event e) {
 	String name = e.getProperty("name");
 	String script = e.getProperty("script");
-	FILE f = System.fopen("./" + name + ".k", "w");
+	FILE f = new FILE("./" + name + ".k", "w");
 	f.write(script.toBytes());
 	f.close();
-	Subproc sp = new Subproc("", false);
-	sp.enableShellmode(false);
 	String command = "minikonoha " + name + ".k";
+	Subproc sp = new Subproc(command, false);
+	sp.enableShellmode(false);
+	sp.enablePipemodeOUT(true);
 	Logger startlog = new Logger();
 	startlog.set("state", "start");
 	startlog.out();
-	String result = sp.exec(command);
+	sp.fg();
+	String result = sp.communicate("")[0];
 	Logger endlog = new Logger();
 	endlog.set("state", "end");
 	endlog.out();
