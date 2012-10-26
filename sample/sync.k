@@ -6,7 +6,7 @@ import("konoha.bytes");
 import("konoha.file");
 import("posix.process");
 import("cstyle", "while");
-import("dscript.task");
+import("dscript.control");
 
 const BUFSIZ = 4096;
 
