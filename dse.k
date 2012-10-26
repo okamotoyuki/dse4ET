@@ -62,8 +62,8 @@ void executeScript(Event e) {
 	String name = e.getProperty("Name");
 	String scriptname = name + ".k"
 	String script = e.getProperty("Script");
-	String cid = e.getProperty("Cid");
-	String tid = e.getProperty("Tid");
+	String cid = e.getProperty("CId");
+	String tid = e.getProperty("TId");
 	String to = e.getProperty("To");
 	String from = e.getProperty("From");
 	String[] strs = to.split(":");
@@ -83,8 +83,8 @@ void executeScript(Event e) {
 
 	Logger startlog = new Logger();
 	startlog.set("Method", "StartTask");
-	startlog.set("Cid", cid);
-	startlog.set("Tid", tid);
+	startlog.set("CId", cid);
+	startlog.set("TId", tid);
 	startlog.set("State", "start");
 	startlog.set("ScriptName", scriptname);
 	startlog.set("Ip", to);
@@ -98,8 +98,8 @@ void executeScript(Event e) {
 	Logger endlog = new Logger();
 	endlog.set("Method", "EndTask");
 	endlog.set("State", "end");
-	endlog.set("Cid", cid);
-	endlog.set("Tid", tid);
+	endlog.set("CId", cid);
+	endlog.set("TId", tid);
 	Json sdata = new Json();
 	sdata.setString("event", tid);
 
