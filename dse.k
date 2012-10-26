@@ -25,16 +25,17 @@
  ***************************************************************************/
 
 import("jansson");
+import("curl");
 import("konoha.new");
 import("konoha.class");
+import("konoha.const");
 import("konoha.string");
 import("konoha.bytes");
-import("konoha.const");
 import("konoha.file");
 import("konoha.date");
+import("konoha.eventlistener");
 import("cstyle", "while");
 import("posix.process");
-import("dscript.eventlistener");
 import("dscript.subproc");
 
 const DTASK_SUCCESS = 0;
@@ -61,44 +62,66 @@ void executeScript(Event e) {
 	String name = e.getProperty("name");
 	String scriptname = name + ".k"
 	String script = e.getProperty("script");
-	String ip = e.getProperty("ip");
+	String taskid = e.getProperty("taskid");
+	String to = e.getProperty("to");
+	String from = e.getProperty("from");
+	String[] strs = to.split(":");
+	String localhost = "\\" + "\"" + strs[0] + "\\" + "\"";
+	int    port = strs[1].toint();
+
 	FILE f = new FILE(scriptname, "w");
 	f.write(script.toBytes());
 	f.close();
 
-	String command = "minikonoha " + scriptname;
+	String command = "minikonoha -DHOST=" + localhost + " -DPORT=" + port + " " + scriptname;
+//	System.p(command); // for debug
 	Subproc sp = new Subproc(command, false);
 	sp.enableShellmode(false);
 	sp.enablePipemodeOUT(true);
+
 	Logger startlog = new Logger();
 	startlog.set("state", "start");
 	startlog.set("script_name", scriptname);
-	startlog.set("ip", ip);
+	startlog.set("ip", to);
 	Date starttime = new Date();
 	startlog.set("time", starttime.getTime().toString());
 	startlog.out();
+
 	int result = sp.fg();
 	String error = sp.communicate("")[0];
+
 	Logger endlog = new Logger();
 	endlog.set("state", "end");
+	Json sdata = new Json();
+	sdata.setString("event", taskid);
+
 	if(result == DTASK_SUCCESS) {
 		endlog.set("result", "success");
+		sdata.setString("result", "success");
 	}
 	else {
 		endlog.set("result", "error");
 		endlog.set("error_log", error);
+		sdata.setString("result", "error");
 	}
+
 	endlog.set("script_name", scriptname);
-	startlog.set("ip", ip);
+	startlog.set("ip", to);
 	Date endtime = new Date();
 	endlog.set("time", endtime.getTime().toString());
 	endlog.out();
+
+	String response = sdata.dump();
+	Curl c = new Curl();
+	String url = "http://" + from;
+	c.setOpt(CURLOPT_URL, url);
+	c.setOpt(CURLOPT_POSTFIELDS, response);
+
 	System.p(error);
 }
 
 void DSE() {
 	EventHandler.setCallBack("D-Task", executeScript);
-
 	HttpEventListener.start("127.0.0.1", PORT);
 
 	while(true) {
