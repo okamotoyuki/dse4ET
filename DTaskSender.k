@@ -11,7 +11,7 @@ import("dscript.task");
 const BUFSIZ = 4096;
 
 void sendDTask() {
-	DControl.start("127.0.0.1", 80);
+	DControl.start("127.0.0.1", 80, "cid");
 	FILE script = new FILE(SCRIPT, "r");
 	Bytes buf = new Bytes(BUFSIZ);
 	buf.setAll(0);

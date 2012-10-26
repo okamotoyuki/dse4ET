@@ -59,12 +59,13 @@ class Logger {
 }
 
 void executeScript(Event e) {
-	String name = e.getProperty("name");
+	String name = e.getProperty("Name");
 	String scriptname = name + ".k"
-	String script = e.getProperty("script");
-	String taskid = e.getProperty("taskid");
-	String to = e.getProperty("to");
-	String from = e.getProperty("from");
+	String script = e.getProperty("Script");
+	String cid = e.getProperty("Cid");
+	String tid = e.getProperty("Tid");
+	String to = e.getProperty("To");
+	String from = e.getProperty("From");
 	String[] strs = to.split(":");
 	String localhost = "\\" + "\"" + strs[0] + "\\" + "\"";
 	int    port = strs[1].toint();
@@ -72,50 +73,61 @@ void executeScript(Event e) {
 	FILE f = new FILE(scriptname, "w");
 	f.write(script.toBytes());
 	f.close();
+	System.p("dse received script"); // for debug
 
 	String command = "minikonoha -DHOST=" + localhost + " -DPORT=" + port + " " + scriptname;
-//	System.p(command); // for debug
+	System.p(command); // for debug
 	Subproc sp = new Subproc(command, false);
 	sp.enableShellmode(false);
 	sp.enablePipemodeOUT(true);
 
 	Logger startlog = new Logger();
-	startlog.set("state", "start");
-	startlog.set("script_name", scriptname);
-	startlog.set("ip", to);
+	startlog.set("Method", "StartTask");
+	startlog.set("Cid", cid);
+	startlog.set("Tid", tid);
+	startlog.set("State", "start");
+	startlog.set("ScriptName", scriptname);
+	startlog.set("Ip", to);
 	Date starttime = new Date();
-	startlog.set("time", starttime.getTime().toString());
+	startlog.set("Time", starttime.getTime().toString());
 	startlog.out();
 
 	int result = sp.fg();
 	String error = sp.communicate("")[0];
 
 	Logger endlog = new Logger();
-	endlog.set("state", "end");
+	endlog.set("Method", "EndTask");
+	endlog.set("State", "end");
+	endlog.set("Cid", cid);
+	endlog.set("Tid", tid);
 	Json sdata = new Json();
-	sdata.setString("event", taskid);
+	sdata.setString("event", tid);
 
 	if(result == DTASK_SUCCESS) {
-		endlog.set("result", "success");
-		sdata.setString("result", "success");
+		endlog.set("Result", "success");
+		sdata.setString("Result", "success");
 	}
 	else {
-		endlog.set("result", "error");
-		endlog.set("error_log", error);
+		endlog.set("Result", "error");
+		endlog.set("ErrorLog", error);
 		sdata.setString("result", "error");
 	}
 
-	endlog.set("script_name", scriptname);
-	startlog.set("ip", to);
+	endlog.set("ScriptName", scriptname);
+	startlog.set("Ip", to);
 	Date endtime = new Date();
-	endlog.set("time", endtime.getTime().toString());
+	endlog.set("Time", endtime.getTime().toString());
 	endlog.out();
+	System.p("dse executed script"); // for debug
 
 	String response = sdata.dump();
+	System.p("response:" + response); // for debug
 	Curl c = new Curl();
 	String url = "http://" + from;
 	c.setOpt(CURLOPT_URL, url);
 	c.setOpt(CURLOPT_POSTFIELDS, response);
+	c.perform();
+	System.p("dse sended response");
 
 	System.p(error);
 }
