@@ -60,13 +60,15 @@ class Logger {
 
 void executeScript(Event e) {
 	String cid = e.getProperty("CId");
-	String tid = e.getProperty("TId");
+	String tid;
 	String name;
 	if(e.getProperty("event") == "D-Control") {
 		name = cid;
+		tid = "0";
 	}
 	else if(e.getProperty("event") == "D-Task") {
 		name = e.getProperty("Name");
+		tid = e.getProperty("TId");
 	}
 	else {
 		System.p("DSE handles only D-Script");
