@@ -114,7 +114,7 @@ void executeScript(Event e) {
 	}
 
 	endlog.set("ScriptName", scriptname);
-	startlog.set("Ip", to);
+	endlog.set("Ip", to);
 	Date endtime = new Date();
 	endlog.set("Time", endtime.getTime().toString());
 	endlog.out();
