@@ -59,11 +59,21 @@ class Logger {
 }
 
 void executeScript(Event e) {
-	String name = e.getProperty("Name");
-	String scriptname = name + ".k"
-	String script = e.getProperty("Script");
 	String cid = e.getProperty("CId");
 	String tid = e.getProperty("TId");
+	String name;
+	if(e.getProperty("event") == "D-Control") {
+		name = cid;
+	}
+	else if(e.getProperty("event") == "D-Task") {
+		name = e.getProperty("Name");
+	}
+	else {
+		System.p("DSE handles only D-Script");
+		return;
+	}
+	String scriptname = name + ".k"
+	String script = e.getProperty("Script");
 	String to = e.getProperty("To");
 	String from = e.getProperty("From");
 	String[] strs = to.split(":");
@@ -133,6 +143,7 @@ void executeScript(Event e) {
 }
 
 void DSE() {
+	EventHandler.setCallBack("D-Control", executeScript);
 	EventHandler.setCallBack("D-Task", executeScript);
 	HttpEventListener.start("127.0.0.1", PORT);
 
