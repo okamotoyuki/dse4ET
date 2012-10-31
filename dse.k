@@ -53,6 +53,7 @@ class Logger {
 
 	void out() {
 		String str = this.data.dump();
+		System.p(str); // for debug
 		String command = "logger " + str.replace("\"", "\\" + "\"");
 		System.system(command);
 	}
