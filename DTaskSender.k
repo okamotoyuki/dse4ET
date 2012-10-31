@@ -1,24 +1,39 @@
 #!/usr/local/bin/minikonoha
 
+import("jansson");
+import("curl");
 import("konoha.new");
 import("konoha.class");
 import("konoha.const");
 import("konoha.string");
 import("konoha.bytes");
 import("konoha.file");
-import("dscript.control");
+//import("dscript.control");
 
 const BUFSIZ = 4096;
 
 void sendDTask() {
-	DControl.start("127.0.0.1", 80, "cid");
+	String to = "127.0.0.1:8080";
+	String from = "127.0.0.1:80";
+
 	FILE script = new FILE(SCRIPT, "r");
 	Bytes buf = new Bytes(BUFSIZ);
 	buf.setAll(0);
 	script.read(buf);
 	script.close();
-	DTask task = new DTask(SCRIPT, new String(buf), EVAL);
-	task.dispatch("127.0.0.1");
+
+	Json sdata = new Json();
+	sdata.setString("event", "D-Control");
+	sdata.setString("Script", new String(buf));
+	sdata.setString("CId", "cid");
+	sdata.setString("To", to);
+	sdata.setString("From", from);
+	sdata.setInt("Option", 0);
+	String req = sdata.dump();
+	Curl c = new Curl();
+	c.setOpt(CURLOPT_URL, "http://" + to);
+	c.setOpt(CURLOPT_POSTFIELDS, req);
+	c.perform();
 }
 
 sendDTask();
