@@ -31,6 +31,7 @@ import("konoha.class");
 import("konoha.const");
 import("konoha.string");
 import("konoha.bytes");
+import("konoha.array");
 import("konoha.file");
 import("konoha.date");
 import("konoha.eventlistener");
@@ -53,7 +54,7 @@ class Logger {
 
 	void out() {
 		String str = this.data.dump();
-		System.p(str); // for debug
+		System.p("log:" + str); // for debug
 		String command = "logger " + str.replace("\"", "\\" + "\"");
 		System.system(command);
 	}
@@ -88,11 +89,12 @@ void executeScript(Event e) {
 	f.close();
 	System.p("dse received script"); // for debug
 
-	String command = "minikonoha -DHOST=" + localhost + " -DPORT=" + port + " " + scriptname;
-	System.p(command); // for debug
-	Subproc sp = new Subproc(command, false);
-	sp.enableShellmode(false);
-	sp.enablePipemodeOUT(true);
+	String command = "minikonoha"
+	System.p("command:" + command); // for debug
+	String[] arglist = ("-DHOST=" + localhost + " -DPORT=" + port + " " + scriptname).split(" ");
+	System.p("arglist:" + arglist); // for debug
+	SubProc sp = new SubProc(command);
+	sp.setArgumentList(arglist);
 
 	Logger startlog = new Logger();
 	startlog.set("Method", "StartTask");
@@ -106,6 +108,7 @@ void executeScript(Event e) {
 	startlog.out();
 
 	int result = sp.fg();
+	System.p("result:" + result); // for debug
 	String error = sp.communicate("")[0];
 
 	Logger endlog = new Logger();
