@@ -12,7 +12,8 @@ const BUFSIZ = 4096;
 
 void processAfterTaskA(Event e) {
 	System.p("taskA done");
-	FILE f = new FILE("hoge", "w");
+	int pid = System.getpid();
+	System.system("kill " + pid); // TODO replace to exit()
 }
 
 void controller() {
