@@ -16,8 +16,8 @@ void processAfterTaskA(Event e) {
 	global.finishedTaskAs = global.finishedTaskAs + 1;
 	if(global.finishedTaskAs == 2) {
 		System.p("taskAs done");
-		FILE f = new FILE("hoge", "w");
-		return;
+		int pid = System.getpid();
+		System.system("kill " + pid); // TODO replace to exit()
 	}
 }
 
