@@ -48,6 +48,9 @@ String generateFunctionFromTaskGroup(String DControlScript, Json taskGroup, Stri
 			String name = task.getString("Name");
 			String script = task.getString("Script");
 			String ip = task.getString("Ip");
+			DControlScript = DControlScript + "\t\tDTask " + name + " = new DTask(\"" + name + "\", \"" + script + "\", EVAL);\n";
+			DControlScript = DControlScript + "\t\t" + name + ".end = " + funcName + ";\n";
+			DControlScript = DControlScript + "\t\t" + name + ".dispatch(\"" + ip.split(":")[0] + "\", " + ip.split(":")[1] + ");\n";
 			i = i + 1;
 		}
 
