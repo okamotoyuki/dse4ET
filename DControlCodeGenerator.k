@@ -105,7 +105,7 @@ void main() {
 
 	DControlScript = DControlScript + "void FuncLast(Event e) {\n";
 	DControlScript = DControlScript + "\tglobal.GlobalVariableLast = global.GlobalVariableLast + 1;\n\n";
-	DControlScript = DControlScript + "\tif(global.GlobalVariableLast == " + taskGroupList[i].getKeys().getSize() + ")\n";
+	DControlScript = DControlScript + "\tif(global.GlobalVariableLast == " + taskGroupList[i].getKeys().getSize() + ") {\n";
 	DControlScript = DControlScript + "\t\tSystem.system(\"kill \" + System.getpid());\n";
 	DControlScript = DControlScript + "\t}\n";
 	DControlScript = DControlScript + "}\n\n";
