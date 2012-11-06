@@ -1,6 +1,7 @@
 import("jansson");
 import("konoha.new");
 import("konoha.class");
+import("konoha.object");
 import("konoha.array");
 import("konoha.string");
 import("konoha.bytes");
@@ -130,7 +131,7 @@ void main() {
 
 /* generate file */
 	FILE fp = new FILE("test.k", "w");
-	fp.write(DControlScript.toBytes());
+	fp.write(DControlScript to Bytes);
 	fp.close();
 }
 

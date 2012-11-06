@@ -29,6 +29,7 @@ import("curl");
 import("konoha.new");
 import("konoha.class");
 import("konoha.const");
+import("konoha.object");
 import("konoha.string");
 import("konoha.bytes");
 import("konoha.array");
@@ -55,7 +56,7 @@ class Logger {
 	void out() {
 		String str = this.data.dump();
 		System.p("log:" + str); // for debug
-		String command = "logger " + str.replace("\"", "\\" + "\"");
+		String command = "logger " + str.replace("\"", "\\" + "\"").replace("(", "\\" + "(").replace(")", "\\" + ")");
 		System.system(command);
 	}
 }
@@ -79,14 +80,14 @@ void executeScript(Event e) {
 	String scriptname = name + ".k"
 	String script = e.getProperty("Script");
 	String option = e.getProperty("Option");
-	String to = e.getProperty("To");
-	String from = e.getProperty("From");
-	String[] strs = to.split(":");
+	String To = e.getProperty("To");
+	String From = e.getProperty("From");
+	String[] strs = To.split(":");
 	String localhost = "\\" + "\"" + strs[0] + "\\" + "\"";
-	int    port = strs[1].toint();
+	int    port = strs[1] to int;
 
 	FILE f = new FILE(scriptname, "w");
-	f.write(script.toBytes());
+	f.write(script to Bytes);
 	f.close();
 	System.p("dse received script"); // for debug
 
@@ -106,9 +107,9 @@ void executeScript(Event e) {
 	startlog.set("TId", tid);
 	startlog.set("State", "start");
 	startlog.set("ScriptName", scriptname);
-	startlog.set("Ip", to);
+	startlog.set("Ip", To);
 	Date starttime = new Date();
-	startlog.set("Time", starttime.getTime().toString());
+	startlog.set("Time", starttime.getTime() to String);
 	startlog.out();
 
 	int result = sp.fg();
@@ -134,16 +135,16 @@ void executeScript(Event e) {
 	}
 
 	endlog.set("ScriptName", scriptname);
-	endlog.set("Ip", to);
+	endlog.set("Ip", To);
 	Date endtime = new Date();
-	endlog.set("Time", endtime.getTime().toString());
+	endlog.set("Time", endtime.getTime() to String);
 	endlog.out();
 	System.p("dse executed script"); // for debug
 
 	String response = sdata.dump();
 	System.p("response:" + response); // for debug
 	Curl c = new Curl();
-	String url = "http://" + from;
+	String url = "http://" + From;
 	c.setOpt(CURLOPT_URL, url);
 	c.setOpt(CURLOPT_POSTFIELDS, response);
 	c.perform();
