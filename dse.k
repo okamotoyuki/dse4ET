@@ -56,7 +56,7 @@ class Logger {
 	void out() {
 		String str = this.data.dump();
 		System.p("log:" + str); // for debug
-		String command = "logger " + str.replace("\"", "\\" + "\"").replace("(", "\\" + "(").replace(")", "\\" + ")");
+		String command = "logger -t minioknoha " + str.replace("\"", "\\" + "\"").replace("(", "\\" + "(").replace(")", "\\" + ")");
 		System.system(command);
 	}
 }
