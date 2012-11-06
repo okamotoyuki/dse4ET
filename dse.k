@@ -78,6 +78,7 @@ void executeScript(Event e) {
 	}
 	String scriptname = name + ".k"
 	String script = e.getProperty("Script");
+	String option = e.getProperty("Option");
 	String to = e.getProperty("To");
 	String from = e.getProperty("From");
 	String[] strs = to.split(":");
@@ -92,6 +93,9 @@ void executeScript(Event e) {
 	String command = "minikonoha"
 	System.p("command:" + command); // for debug
 	String[] arglist = ("-DHOST=" + localhost + " -DPORT=" + port + " " + scriptname).split(" ");
+	if(option == "Test") {
+		arglist.add("--trace");
+	}
 	System.p("arglist:" + arglist); // for debug
 	SubProc sp = new SubProc(command);
 	sp.setArgumentList(arglist);

@@ -28,7 +28,7 @@ void sendDTask() {
 	sdata.setString("CId", "cid");
 	sdata.setString("To", to);
 	sdata.setString("From", from);
-	sdata.setInt("Option", 0);
+	sdata.setString("Option", "Operate");
 	String req = sdata.dump();
 	Curl c = new Curl();
 	c.setOpt(CURLOPT_URL, "http://" + to);
