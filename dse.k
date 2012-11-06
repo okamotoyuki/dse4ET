@@ -86,14 +86,14 @@ void executeScript(Event e) {
 	String localhost = "\\" + "\"" + strs[0] + "\\" + "\"";
 	int    port = strs[1] to int;
 
-	FILE f = new FILE(scriptname, "w");
+	FILE f = new FILE("script/" + scriptname, "w");
 	f.write(script to Bytes);
 	f.close();
 	System.p("dse received script"); // for debug
 
 	String command = "minikonoha"
 	System.p("command:" + command); // for debug
-	String[] arglist = ("-DHOST=" + localhost + " -DPORT=" + port + " " + scriptname).split(" ");
+	String[] arglist = ("-DHOST=" + localhost + " -DPORT=" + port + " " + "script/" + scriptname).split(" ");
 	if(option == "Test") {
 		arglist.add("--trace");
 	}
