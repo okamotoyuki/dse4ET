@@ -93,7 +93,7 @@ void executeScript(Event e) {
 
 	String command = "minikonoha"
 	System.p("command:" + command); // for debug
-	String[] arglist = ("-DHOST=" + localhost + " -DPORT=" + port + " " + "script/" + scriptname).split(" ");
+	String[] arglist = ("-Idscript.log -DHOST=" + localhost + " -DPORT=" + port + " " + "script/" + scriptname).split(" ");
 	if(option == "Test") {
 		arglist.add("--trace");
 	}
