@@ -30,15 +30,15 @@ import("konoha.new");
 import("konoha.class");
 import("konoha.const");
 import("konoha.object");
+import("konoha.array");
 import("konoha.string");
 import("konoha.bytes");
-import("konoha.array");
+import("dscript.subproc");
 import("konoha.file");
 import("konoha.date");
 import("konoha.eventlistener");
 import("cstyle", "while");
 import("posix.process");
-import("dscript.subproc");
 
 const DTASK_SUCCESS = 0;
 
@@ -77,7 +77,7 @@ void executeScript(Event e) {
 		System.p("DSE handles only D-Script");
 		return;
 	}
-	String scriptname = name + ".k"
+	String scriptname = cid + ":" + tid + ".k"
 	String script = e.getProperty("Script");
 	String option = e.getProperty("Option");
 	String To = e.getProperty("To");
