@@ -93,9 +93,9 @@ void executeScript(Event e) {
 
 	String command = "minikonoha"
 	System.p("command:" + command); // for debug
-	String[] arglist = ("-MDScriptConsole -Ikonoha.console -DHOST=" + localhost + " -DPORT=" + port + " " + "script/" + scriptname).split(" ");
+	String[] arglist = ("-MDScriptConsole -Ikonoha.console -Idscript.shell -DUSE_PRINT=1 -DHOST=" + localhost + " -DPORT=" + port + " " + "script/" + scriptname).split(" ");
 	if(option == "Test") {
-		arglist.add("--trace");
+		arglist.add("-MTraceVM");
 	}
 	System.p("arglist:" + arglist); // for debug
 	SubProc sp = new SubProc(command);
