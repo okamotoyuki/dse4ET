@@ -93,7 +93,7 @@ void executeScript(Event e) {
 
 	String command = "minikonoha"
 	System.p("command:" + command); // for debug
-	String[] arglist = ("-DUSE_PRINT=1 -DHOST=" + localhost + " -DPORT=" + port + " -MSyslog -MDScriptConsole -MDiagnosis -Ikonoha.console -Idscript.shell script/" + scriptname).split(" ");
+	String[] arglist = ("-DUSE_PRINT=1 -DHOST=" + localhost + " -DPORT=" + port + " -MSyslog -MDScriptConsole -MDiagnosis -Ikonoha.console script/" + scriptname).split(" ");
 	if(option == "Test") {
 		arglist.add("-MTraceVM");
 	}
