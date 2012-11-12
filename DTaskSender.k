@@ -8,7 +8,6 @@ import("konoha.const");
 import("konoha.string");
 import("konoha.bytes");
 import("konoha.file");
-//import("dscript.control");
 
 const BUFSIZ = 4096;
 
